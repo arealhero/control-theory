@@ -9,12 +9,16 @@ syms t real;
 P = [2 -1; 1 2];
 
 N = length(P);
-P = sym(P)
+P = sym(P);
 b = sym('b', [N 1]);
+
+printf(" -> P:\n%s\n", pretty(P));
 
 % Находим собственные числа и их алгебраическую кратность
 eig_vec = eig(P);
 eigenvalues = unique(eig_vec).';
+printf("\n -> eigenvalues:\n%s\n", pretty(eigenvalues));
+
 syms count;
 
 A = sym('A', size(P));
@@ -25,16 +29,14 @@ ignored_eigenvalues = [];
 index = 1;
 for i = 1:numel(eigenvalues)
   eigenvalue = eigenvalues(i);
+  fprintf("\n -> processing eigenvalue: %s", pretty(eigenvalue));
   if length(find(ignored_eigenvalues==eigenvalue)) ~= 0
-    fprintf(" -> ignored:\n")
-    eigenvalue
+    fprintf("   -> ignoring\n");
     continue
   end
 
   count = length(find(eig_vec==eigenvalue));
-
-  eigenvalue
-  count
+  fprintf("   -> algebraic multiplicity: %d\n", count);
 
   if imag(eigenvalue) == 0
     for row = 1:count
@@ -67,13 +69,14 @@ for i = 1:numel(eigenvalues)
       lhs = diff(lhs, z);
     end
 
-    fprintf("ignored_eigenvalues updated:\n");
-    ignored_eigenvalues = [ignored_eigenvalues; conj(eigenvalue)]
+    ignored_eigenvalues = [ignored_eigenvalues; conj(eigenvalue)];
+    fprintf("   -> ignored_eigenvalues updated:\n%s\n", pretty(ignored_eigenvalues));
   end
 
 end
 
-b = simplify(A \ e)
+b = simplify(A \ e);
+fprintf("\n -> b:\n%s\n", pretty(b));
 
 Y = zeros(size(P));
 Y = sym(Y);
@@ -82,4 +85,5 @@ for k = 0:N-1
   Y += b(k+1) * P^k;
 end
 
-simplify(Y)
+Y = simplify(Y);
+fprintf("\n\nRESULT:\n%s\n", pretty(Y));

@@ -48,6 +48,7 @@ for i = 1:numel(eigenvalues)
   else
     syms z;
     lhs = exp(z * t);
+    rhs = sym('rhs', [1 N]);
 
     for row = 1:count
       for col = 1:N

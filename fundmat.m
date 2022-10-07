@@ -87,3 +87,7 @@ end
 
 Y = simplify(Y);
 fprintf("\n\nRESULT:\n%s\n", pretty(Y));
+
+printf("\n--- TEST ---\n");
+printf(" -> Y' = PY: %s\n", mat2str(areIdentical(diff(Y), P * Y)))
+printf(" -> Y(0) = E: %s\n", mat2str(areIdentical(subs(Y, 0), eye(N))))
